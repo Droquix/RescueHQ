@@ -51,10 +51,11 @@ RUN chown -R nextjs:nodejs /app
 
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 8080
 
-ENV PORT=3000
+ENV PORT=8080
 ENV HOSTNAME="0.0.0.0"
+
 
 # Run db:push to ensure the DB is created/updated, then start the server
 CMD npx prisma db push && node server.js
