@@ -50,6 +50,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 
 RUN chown -R nextjs:nodejs /app
+RUN rm -f prisma.config.ts
+
 
 
 USER nextjs
