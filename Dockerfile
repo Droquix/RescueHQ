@@ -34,7 +34,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-RUN npm install -g prisma@7.8.0
+RUN npm install -g prisma@7.8.0 dotenv@17.4.2
 
 
 COPY --from=builder /app/public ./public
@@ -50,9 +50,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 
 RUN chown -R nextjs:nodejs /app
-RUN rm -f prisma.config.ts
 
-
+ENV NODE_PATH=/usr/local/lib/node_modules
 
 USER nextjs
 
