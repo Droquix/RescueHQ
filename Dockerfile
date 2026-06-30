@@ -46,6 +46,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Ensure Prisma engine, schema, and migrations are copied for DB operations
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 
+RUN chown -R nextjs:nodejs /app
+
+
 USER nextjs
 
 EXPOSE 3000
