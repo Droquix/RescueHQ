@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+Dockerfile
+.dockerignore
+*.db
+*.db-journal
+yt-dlp.exe
+ffmpeg.exe
+test.mp3

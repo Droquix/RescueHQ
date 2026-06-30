@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Task {
+  id               String    @id @default(cuid())
+  title            String
+  description      String?
+  priority         String    @default("medium")
+  status           String    @default("pending")
+  dueDate          DateTime?
+  estimatedMinutes Int       @default(30)
+  category         String    @default("general")
+  contextTags      String    @default("[]")
+  urgencyScore     Float     @default(0)
+  aiReason         String?
+  feasibilityPlan  String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  completedAt      DateTime?
+
+  subtasks   SubTask[]
+  reminders  Reminder[]
+  scheduleBlocks ScheduleBlock[]
+}
+
+model SubTask {
+  id          String   @id @default(cuid())
+  taskId      String
+  title       String
+  completed   Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Goal {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  targetDate  DateTime?
+  progress    Int      @default(0)
+  milestones  String   @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Habit {
+  id            String   @id @default(cuid())
+  title         String
+  frequency     String   @default("daily")
+  streak        Int      @default(0)
+  bestStreak    Int      @default(0)
+  lastCompleted DateTime?
+  createdAt     DateTime @default(now())
+
+  logs HabitLog[]
+}
+
+model HabitLog {
+  id        String   @id @default(cuid())
+  habitId   String
+  date      DateTime @default(now())
+  completed Boolean  @default(true)
+
+  habit Habit @relation(fields: [habitId], references: [id], onDelete: Cascade)
+}
+
+model Reminder {
+  id          String   @id @default(cuid())
+  taskId      String?
+  message     String
+  context     String   @default("general")
+  scheduledFor DateTime
+  triggered   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  task Task? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+}
+
+model ScheduleBlock {
+  id        String   @id @default(cuid())
+  taskId    String?
+  title     String
+  startTime DateTime
+  endTime   DateTime
+  aiGenerated Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  task Task? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+}
